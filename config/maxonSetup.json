@@ -1,0 +1,10 @@
+{
+    "motors": [
+        {"file": "largeMotor.json",
+         "nodeId": 1,
+         "taskName": "motor1"},
+        {"file": "largeMotor.json",
+         "nodeId": 2,
+         "taskName": "motor2"}]
+}
+

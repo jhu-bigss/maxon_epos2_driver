@@ -1,0 +1,13 @@
+{
+    "motors": [
+        {"file": "smallMotor.json",
+         "nodeId": 1,
+         "taskName": "motor1"
+         },
+        {"file": "smallMotor.json",
+         "nodeId": 2,
+         "taskName": "motor2"
+         }
+    ]
+}
+

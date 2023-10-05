@@ -1,0 +1,19 @@
+{
+    "motors": [
+        {"file": "smallMotor.json",
+         "nodeId": 1,
+         "taskName": "motor1",
+	 "loadCell": {
+		"cal": 2.3693,
+		"excitation": 5.0
+         }},
+        {"file": "smallMotor.json",
+         "nodeId": 2,
+         "taskName": "motor2",
+	 "loadCell": {
+		"cal": 2.3693,
+		"excitation": 5.0
+         }}
+    ]
+}
+
