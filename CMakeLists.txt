@@ -43,6 +43,7 @@ if (cisst_FOUND_AS_REQUIRED)
   )
   # Source files
   set(maxon_epos2_driver_SOURCES
+    src/bigss_debug_util.cpp
     src/main_maxon_control.cpp
     src/maxonControlWidget.cpp
     src/maxonInterface.cpp

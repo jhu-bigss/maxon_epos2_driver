@@ -5,9 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <climits>
-#include <chrono>
 
-#include "Definitions.h"
+#include "maxon_epos2_driver/Definitions.h"
 
 #include <json/json.h>
 
@@ -16,14 +15,11 @@
 #include <cisstOSAbstraction/osaSleep.h>
 #include <cisstParameterTypes/prmRobotState.h>
 
+#include "maxon_epos2_driver//bigss_debug_util.h"
+
 #ifndef WIN32
 typedef int BOOL;
 #endif
-inline long long time_now_ms() {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-               std::chrono::system_clock::now().time_since_epoch())
-        .count();
-}
 
 CMN_IMPLEMENT_SERVICES_DERIVED(maxonMotor, mtsTaskPeriodic)
 
@@ -65,7 +61,7 @@ maxonMotor::maxonMotor(const unsigned short id, HANDLE c, const std::string &tas
   stopEndTime(-1.0),
   velocitySetPoint(0.0),
   setPointMode(false),
-  lastVelocityCommand( time_now_ms()),
+  lastVelocityCommand(bigss::time_now_ms()),
   lastVelocityCommandThresh(1000)
 {
   createInterface();
@@ -112,7 +108,7 @@ maxonMotor::maxonMotor(const unsigned short id, const std::string &filename, HAN
   stopEndTime(-1.0),
   velocitySetPoint(0.0),
   setPointMode(false),
-  lastVelocityCommand( time_now_ms()),
+  lastVelocityCommand(bigss::time_now_ms()),
   lastVelocityCommandThresh(1000)
 {
   createInterface();
@@ -155,7 +151,7 @@ void maxonMotor::resetTimingVariables()
 
 void maxonMotor::Run()
 {
-  startTime =  time_now_ms();
+  startTime = bigss::time_now_ms();
   resetTimingVariables();
   numCommandsProcessed = ProcessQueuedCommands();
 
@@ -175,7 +171,7 @@ void maxonMotor::Run()
   {
     CMN_LOG_CLASS_RUN_DEBUG << "MOVING " << this->Name << " IN SET POINT MODE " << velocitySetPoint << std::endl;
     bool nonZeroSetPoint = (std::abs(velocitySetPoint) > 0.0001);
-    bool timedOut =  time_now_ms() - lastVelocityCommand > lastVelocityCommandThresh;
+    bool timedOut = bigss::time_now_ms() - lastVelocityCommand > lastVelocityCommandThresh;
 
     // if there's a nonzero command, and we haven't timed out OR there's no timeout
     // in place, then command the motor
@@ -190,7 +186,7 @@ void maxonMotor::Run()
 
   }
 
-  endTime =  time_now_ms();
+  endTime = bigss::time_now_ms();
 }
 
 void maxonMotor::createInterface()
@@ -620,7 +616,7 @@ void maxonMotor::disable()
 
 void maxonMotor::stop()
 {
-  stopStartTime =  time_now_ms();
+  stopStartTime = bigss::time_now_ms();
 
   switch(operationalMode) {
     case OMD_PROFILE_POSITION_MODE:
@@ -644,7 +640,7 @@ void maxonMotor::stop()
       break;
   }
 
-  stopEndTime =  time_now_ms();
+  stopEndTime = bigss::time_now_ms();
 }
 
 void maxonMotor::getNegativeLimit(mtsDouble &limit) const
@@ -687,12 +683,12 @@ void maxonMotor::setSetPointMode(const mtsBool &b)
 
 void maxonMotor::setVelocity(const mtsDouble &vel)
 {
-  setVelocityStartTime =  time_now_ms();
+  setVelocityStartTime = bigss::time_now_ms();
 
   targetVelocity = std::abs(unitsToRPM(vel.Data));
   setPositionProfile();
 
-  setVelocityEndTime =  time_now_ms();
+  setVelocityEndTime = bigss::time_now_ms();
 }
 
 void maxonMotor::setVelocity_raw(const mtsLong &vel)
@@ -703,7 +699,7 @@ void maxonMotor::setVelocity_raw(const mtsLong &vel)
 
 void maxonMotor::setVelocityPoint(const mtsDouble &vel)
 {
-  lastVelocityCommand =  time_now_ms();
+  lastVelocityCommand = bigss::time_now_ms();
   CMN_LOG_CLASS_RUN_DEBUG << "setting velocity point to " << vel.Data
     << " mm" << std::endl;
   velocitySetPoint = unitsToRPM(vel.Data);
@@ -711,7 +707,7 @@ void maxonMotor::setVelocityPoint(const mtsDouble &vel)
 
 void maxonMotor::setVelocityPoint_raw(const mtsDouble &vel)
 {
-  lastVelocityCommand =  time_now_ms();
+  lastVelocityCommand = bigss::time_now_ms();
   CMN_LOG_CLASS_RUN_DEBUG << "setting velocity point to "
     << vel.Data << " rpm" << std::endl;
   velocitySetPoint = vel.Data;
@@ -840,9 +836,9 @@ bool maxonMotor::moveToPosition_raw(const long pos, const bool abs, const bool i
 void maxonMotor::jogPlus()
 {
   CMN_LOG_CLASS_RUN_VERBOSE << "moving motor " << this->Name << " with positive velocity " << targetVelocity << std::endl;
-  moveVelocityStartTime =  time_now_ms();
+  moveVelocityStartTime = bigss::time_now_ms();
   VCS_MoveWithVelocity(controller, nodeId, targetVelocity, &errorCode);
-  moveVelocityEndTime =  time_now_ms();
+  moveVelocityEndTime = bigss::time_now_ms();
 }
 
 void maxonMotor::jogMinus()
@@ -889,3 +885,4 @@ inline double maxonMotor::voltsToForce (const double &volts) const
 {
   return volts * forceGain;
 }
+
