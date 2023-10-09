@@ -1,4 +1,4 @@
-#include "maxonMotorInterface.h"
+#include "maxon_epos2_driver/maxonMotorInterface.h"
 
 #include <cisstMultiTask/mtsInterfaceRequired.h>
 

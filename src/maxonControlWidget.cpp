@@ -1,4 +1,4 @@
-#include "maxonControlWidget.h"
+#include "maxon_epos2_driver/maxonControlWidget.h"
 
 #include <QTimer>
 #include <QCheckBox>

@@ -2,8 +2,8 @@
 #define _MAXON_STATUS_WIDGET_H
 
 #include <QWidget>
-#include <maxonControl/maxonMotor.h>
-#include <maxonControl/maxonMotorInterface.h>
+#include <maxon_epos2_driver/maxonMotor.h>
+#include <maxon_epos2_driver/maxonMotorInterface.h>
 
 class QLineEdit;
 

@@ -1,6 +1,6 @@
-#include "maxonInterface.h"
-#include "maxonMotor.h"
-#include "maxonMotorInterface.h"
+#include "maxon_epos2_driver/maxonInterface.h"
+#include "maxon_epos2_driver/maxonMotor.h"
+#include "maxon_epos2_driver/maxonMotorInterface.h"
 
 #include <cstring>
 #include <cmath>

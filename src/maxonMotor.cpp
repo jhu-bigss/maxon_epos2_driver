@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <climits>
+#include <chrono>
 
 #include "Definitions.h"
 
@@ -18,6 +19,11 @@
 #ifndef WIN32
 typedef int BOOL;
 #endif
+inline long long time_now_ms() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+               std::chrono::system_clock::now().time_since_epoch())
+        .count();
+}
 
 CMN_IMPLEMENT_SERVICES_DERIVED(maxonMotor, mtsTaskPeriodic)
 
@@ -59,7 +65,7 @@ maxonMotor::maxonMotor(const unsigned short id, HANDLE c, const std::string &tas
   stopEndTime(-1.0),
   velocitySetPoint(0.0),
   setPointMode(false),
-  lastVelocityCommand(bigss::time_now_ms()),
+  lastVelocityCommand( time_now_ms()),
   lastVelocityCommandThresh(1000)
 {
   createInterface();
@@ -106,7 +112,7 @@ maxonMotor::maxonMotor(const unsigned short id, const std::string &filename, HAN
   stopEndTime(-1.0),
   velocitySetPoint(0.0),
   setPointMode(false),
-  lastVelocityCommand(bigss::time_now_ms()),
+  lastVelocityCommand( time_now_ms()),
   lastVelocityCommandThresh(1000)
 {
   createInterface();
@@ -149,7 +155,7 @@ void maxonMotor::resetTimingVariables()
 
 void maxonMotor::Run()
 {
-  startTime = bigss::time_now_ms();
+  startTime =  time_now_ms();
   resetTimingVariables();
   numCommandsProcessed = ProcessQueuedCommands();
 
@@ -169,7 +175,7 @@ void maxonMotor::Run()
   {
     CMN_LOG_CLASS_RUN_DEBUG << "MOVING " << this->Name << " IN SET POINT MODE " << velocitySetPoint << std::endl;
     bool nonZeroSetPoint = (std::abs(velocitySetPoint) > 0.0001);
-    bool timedOut = bigss::time_now_ms() - lastVelocityCommand > lastVelocityCommandThresh;
+    bool timedOut =  time_now_ms() - lastVelocityCommand > lastVelocityCommandThresh;
 
     // if there's a nonzero command, and we haven't timed out OR there's no timeout
     // in place, then command the motor
@@ -184,7 +190,7 @@ void maxonMotor::Run()
 
   }
 
-  endTime = bigss::time_now_ms();
+  endTime =  time_now_ms();
 }
 
 void maxonMotor::createInterface()
@@ -614,7 +620,7 @@ void maxonMotor::disable()
 
 void maxonMotor::stop()
 {
-  stopStartTime = bigss::time_now_ms();
+  stopStartTime =  time_now_ms();
 
   switch(operationalMode) {
     case OMD_PROFILE_POSITION_MODE:
@@ -638,7 +644,7 @@ void maxonMotor::stop()
       break;
   }
 
-  stopEndTime = bigss::time_now_ms();
+  stopEndTime =  time_now_ms();
 }
 
 void maxonMotor::getNegativeLimit(mtsDouble &limit) const
@@ -681,12 +687,12 @@ void maxonMotor::setSetPointMode(const mtsBool &b)
 
 void maxonMotor::setVelocity(const mtsDouble &vel)
 {
-  setVelocityStartTime = bigss::time_now_ms();
+  setVelocityStartTime =  time_now_ms();
 
   targetVelocity = std::abs(unitsToRPM(vel.Data));
   setPositionProfile();
 
-  setVelocityEndTime = bigss::time_now_ms();
+  setVelocityEndTime =  time_now_ms();
 }
 
 void maxonMotor::setVelocity_raw(const mtsLong &vel)
@@ -697,7 +703,7 @@ void maxonMotor::setVelocity_raw(const mtsLong &vel)
 
 void maxonMotor::setVelocityPoint(const mtsDouble &vel)
 {
-  lastVelocityCommand = bigss::time_now_ms();
+  lastVelocityCommand =  time_now_ms();
   CMN_LOG_CLASS_RUN_DEBUG << "setting velocity point to " << vel.Data
     << " mm" << std::endl;
   velocitySetPoint = unitsToRPM(vel.Data);
@@ -705,7 +711,7 @@ void maxonMotor::setVelocityPoint(const mtsDouble &vel)
 
 void maxonMotor::setVelocityPoint_raw(const mtsDouble &vel)
 {
-  lastVelocityCommand = bigss::time_now_ms();
+  lastVelocityCommand =  time_now_ms();
   CMN_LOG_CLASS_RUN_DEBUG << "setting velocity point to "
     << vel.Data << " rpm" << std::endl;
   velocitySetPoint = vel.Data;
@@ -834,9 +840,9 @@ bool maxonMotor::moveToPosition_raw(const long pos, const bool abs, const bool i
 void maxonMotor::jogPlus()
 {
   CMN_LOG_CLASS_RUN_VERBOSE << "moving motor " << this->Name << " with positive velocity " << targetVelocity << std::endl;
-  moveVelocityStartTime = bigss::time_now_ms();
+  moveVelocityStartTime =  time_now_ms();
   VCS_MoveWithVelocity(controller, nodeId, targetVelocity, &errorCode);
-  moveVelocityEndTime = bigss::time_now_ms();
+  moveVelocityEndTime =  time_now_ms();
 }
 
 void maxonMotor::jogMinus()

@@ -1,4 +1,4 @@
-#include "maxonStatusWidget.h"
+#include "maxon_epos2_driver/maxonStatusWidget.h"
 
 #include <QFormLayout>
 #include <QLineEdit>
