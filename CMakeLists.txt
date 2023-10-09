@@ -39,13 +39,23 @@ if (cisst_FOUND_AS_REQUIRED)
 
   # Include directories
   include_directories(
-    ${maxon_epos2_driver_INCLUDE_DIR}
+    include
+  )
+  # Source files
+  set(maxon_epos2_driver_SOURCES
+    src/main_maxon_control.cpp
+    src/maxonControlWidget.cpp
+    src/maxonInterface.cpp
+    src/maxonMotor.cpp
+    src/maxonMotorInterface.cpp
+    src/maxonStatusWidget.cpp
+    src/maxonWidget.cpp
   )
 
   # Create a node
-  add_executable(maxon_control src/main_maxon_control.cpp)
-  cisst_target_link_libraries(maxon_control ${REQUIRED_CISST_LIBRARIES})
-  ament_target_dependencies(maxon_control
+  add_executable(maxon_epos2_driver ${maxon_epos2_driver_SOURCES})
+  cisst_target_link_libraries(maxon_epos2_driver ${REQUIRED_CISST_LIBRARIES})
+  ament_target_dependencies(maxon_epos2_driver
     rclcpp
     tf2_ros
     std_srvs
@@ -59,7 +69,7 @@ if (cisst_FOUND_AS_REQUIRED)
 
   # Install nodes
   install(TARGETS
-    maxon_control
+    maxon_epos2_driver
     DESTINATION lib/${PROJECT_NAME}
   )
 
