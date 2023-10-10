@@ -388,6 +388,8 @@ protected:
 
   /// Update the status of the motor
   void updateStatus();
+
+  int time_now_ms();
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(maxonMotor)
