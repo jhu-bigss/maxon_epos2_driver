@@ -2,10 +2,11 @@
 #define _MAXON_STATUS_WIDGET_H
 
 #include <QWidget>
+#include <QLineEdit>
+
 #include <maxon_epos2_driver/maxonMotor.h>
 #include <maxon_epos2_driver/maxonMotorInterface.h>
 
-class QLineEdit;
 
 /*! 
  * This class generates a status widget to display maxon information.

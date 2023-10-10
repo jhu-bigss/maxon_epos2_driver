@@ -2,13 +2,12 @@
 #define _MAXON_CONTROL_WIDGET_H
 
 #include <QWidget>
+#include <QDoubleSpinBox>
+#include <QGroupBox>
+#include <QCheckBox>
 
 #include <cisstMultiTask/mtsComponent.h>
 
-class QGroupBox;
-class QSpinBox;
-class QCheckBox;
-class QDoubleSpinBox;
 
 /*!
  * This class creates a control widget for a maxon motor

@@ -1,8 +1,5 @@
 #include "maxon_epos2_driver/maxonWidget.h"
-#include "maxon_epos2_driver/maxonStatusWidget.h" 
-#include "maxon_epos2_driver/maxonControlWidget.h"
 
-#include "maxon_epos2_driver/maxonInterface.h"
 #include <cisstMultiTask/mtsManagerLocal.h>
 
 #include <QTimer>

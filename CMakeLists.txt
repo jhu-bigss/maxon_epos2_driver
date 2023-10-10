@@ -47,10 +47,6 @@ if (cisst_FOUND_AS_REQUIRED)
     src/maxonInterface.cpp
     src/maxonMotor.cpp
     src/maxonMotorInterface.cpp
-    # src/maxonWidget.cpp
-    # src/maxonControlWidget.cpp
-    # src/maxonStatusWidget.cpp
-    src/bigss_debug_util.cpp
     )
   target_link_libraries(maxon_interface
     -lEposCmd
@@ -76,8 +72,20 @@ if (cisst_FOUND_AS_REQUIRED)
     maxon_interface
     )
 
+  add_executable(maxon_epos2_driver_gui
+    src/main_maxon_ui_control.cpp
+    src/maxonWidget.cpp
+    src/maxonControlWidget.cpp
+    src/maxonStatusWidget.cpp
+    )
+  target_link_libraries(maxon_epos2_driver_gui
+    maxon_interface
+    )
+
+  ## INSTALL ##
   install(TARGETS
     maxon_epos2_driver
+    maxon_epos2_driver_gui
     DESTINATION lib/${PROJECT_NAME}
     )
 

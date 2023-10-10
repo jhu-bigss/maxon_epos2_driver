@@ -12,12 +12,10 @@
 #include <cisstCommon/cmnClassServices.h>
 #include <cisstCommon/cmnClassRegisterMacros.h>
 
-class maxonInterface;
-class maxonControlWidget;
-class maxonStatusWidget;
-class QTimer;
+#include "maxon_epos2_driver/maxonInterface.h"
+#include "maxon_epos2_driver/maxonStatusWidget.h" 
+#include "maxon_epos2_driver/maxonControlWidget.h"
 
-class mtsManagerLocal;
 
 class maxonWidget : public QWidget, public cmnGenericObject
 {
