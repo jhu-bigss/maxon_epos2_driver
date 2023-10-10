@@ -41,22 +41,22 @@ if (cisst_FOUND_AS_REQUIRED)
   include_directories(
     include
   )
-  # Source files
-  set(maxon_epos2_driver_SOURCES
-    src/bigss_debug_util.cpp
-    src/main_maxon_control.cpp
-    src/maxonControlWidget.cpp
+
+  # Create a library
+  add_library(maxon_interface
     src/maxonInterface.cpp
     src/maxonMotor.cpp
     src/maxonMotorInterface.cpp
-    src/maxonStatusWidget.cpp
-    src/maxonWidget.cpp
-  )
-
-  # Create a node
-  add_executable(maxon_epos2_driver ${maxon_epos2_driver_SOURCES})
-  cisst_target_link_libraries(maxon_epos2_driver ${REQUIRED_CISST_LIBRARIES})
-  ament_target_dependencies(maxon_epos2_driver
+    # src/maxonWidget.cpp
+    # src/maxonControlWidget.cpp
+    # src/maxonStatusWidget.cpp
+    src/bigss_debug_util.cpp
+    )
+  target_link_libraries(maxon_interface
+    -lEposCmd
+    )
+  cisst_target_link_libraries(maxon_interface ${REQUIRED_CISST_LIBRARIES})
+  ament_target_dependencies(maxon_interface
     rclcpp
     tf2_ros
     std_srvs
@@ -68,17 +68,32 @@ if (cisst_FOUND_AS_REQUIRED)
     cisst_ros2_crtk
     )
 
-  # Install nodes
+  # Create a node
+  add_executable(maxon_epos2_driver
+    src/main_maxon_control.cpp
+    )
+  target_link_libraries(maxon_epos2_driver
+    maxon_interface
+    )
+
   install(TARGETS
     maxon_epos2_driver
     DESTINATION lib/${PROJECT_NAME}
-  )
+    )
 
   # Install launch files, config, etc.
   install(DIRECTORY
     config
     DESTINATION share/${PROJECT_NAME}
-  )
+    )
+
+  install (
+    TARGETS maxon_interface
+    EXPORT maxon_interface
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    )
 
   ament_package()
 

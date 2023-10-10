@@ -6,7 +6,8 @@
 #include <cmath>
 #include <fstream>
 
-#include "maxon_epos2_driver/Definitions.h"
+// Maxon EPOS2 library Definitions
+#include "Definitions.h"
 
 #include <json/json.h>
 
