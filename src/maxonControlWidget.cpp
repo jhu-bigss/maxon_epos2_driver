@@ -23,16 +23,16 @@
 
 CMN_IMPLEMENT_SERVICES_DERIVED(maxonControlWidget, mtsComponent)
 
-maxonControlWidget::maxonControlWidget(const std::string &taskName, QWidget *parent) :
-  QWidget(parent),
-  mtsComponent(taskName),
-  useRaw(true)
+maxonControlWidget::maxonControlWidget(const std::string &taskName, QWidget *parent) : QWidget(parent),
+                                                                                       mtsComponent(taskName),
+                                                                                       useRaw(true)
 {
   CMN_LOG_CLASS_INIT_DEBUG << "constructing control widget" << std::endl;
 
   // interfaces
   mtsInterfaceRequired *required = AddInterfaceRequired("control");
-  if(required) {
+  if (required)
+  {
     required->AddFunction("enable", maxon.enable);
     required->AddFunction("disable", maxon.disable);
     required->AddFunction("clearFault", maxon.clearFault);
@@ -63,9 +63,9 @@ maxonControlWidget::maxonControlWidget(const std::string &taskName, QWidget *par
     required->AddFunction("negativeLimit", maxon.negativeLimit);
     required->AddFunction("positiveLimit", maxon.positiveLimit);
     required->AddFunction("setNegativeLimit", maxon.setNegativeLimit);
-    //required->AddFunction("setPositiveLimit", maxon.setPositiveLimit);
+    // required->AddFunction("setPositiveLimit", maxon.setPositiveLimit);
     required->AddFunction("setNegativeLimitCurrentPosition", maxon.setNegativeLimitCurrentPosition);
-    //required->AddFunction("setPositiveLimitCurrentPosition", maxon.setPositiveLimitCurrentPosition);
+    // required->AddFunction("setPositiveLimitCurrentPosition", maxon.setPositiveLimitCurrentPosition);
   }
 
   // required = AddInterfaceRequired("state");
@@ -80,7 +80,6 @@ maxonControlWidget::maxonControlWidget(const std::string &taskName, QWidget *par
 
 maxonControlWidget::~maxonControlWidget()
 {
-
 }
 
 void maxonControlWidget::setupUi()
@@ -111,11 +110,11 @@ void maxonControlWidget::setupUi()
   QPushButton *negLimit = new QPushButton(limits);
   negLimit->setText("Set negative limit");
   negLimit->setObjectName("negLimit");
-  //QPushButton *posLimit = new QPushButton(limits);
-  //posLimit->setText("Set positive limit");
-  //posLimit->setObjectName("posLimit");
+  // QPushButton *posLimit = new QPushButton(limits);
+  // posLimit->setText("Set positive limit");
+  // posLimit->setObjectName("posLimit");
   limitsLayout->addWidget(negLimit);
-  //limitsLayout->addWidget(posLimit);
+  // limitsLayout->addWidget(posLimit);
   limits->setLayout(limitsLayout);
 
   layout->addWidget(limits);
@@ -140,7 +139,7 @@ void maxonControlWidget::setupUi()
 
   QPushButton *stop = new QPushButton("Stop", this);
   stop->setObjectName("stop");
-  paramsLayout->addWidget(stop);  
+  paramsLayout->addWidget(stop);
 
   params->setLayout(paramsLayout);
   layout->addWidget(params);
@@ -221,7 +220,7 @@ void maxonControlWidget::setupUi()
   QGroupBox *homingGroup = new QGroupBox(this);
   QFormLayout *homingLayout = new QFormLayout(homingGroup);
   homingGroup->setTitle("Homing");
-  
+
   homingForce = new QDoubleSpinBox(this);
   homingForce->setObjectName("homeForce");
   homingForce->setSuffix(" N");
@@ -255,10 +254,12 @@ void maxonControlWidget::setupUi()
 ///////////////
 void maxonControlWidget::on_enable_toggled(bool checked)
 {
-  if(checked) {
+  if (checked)
+  {
     mtsBool enabled;
     maxon.enable(enabled);
-    if(!enabled) {
+    if (!enabled)
+    {
       mtsStdString err;
       maxon.getErrorString(err);
 
@@ -267,7 +268,9 @@ void maxonControlWidget::on_enable_toggled(bool checked)
       QMessageBox::warning(this, "Maxon", "Could not enable motor node " + QString::number(nodeId.GetData()) + "\n" + QString::fromStdString(err.Data));
       dynamic_cast<QPushButton *>(QObject::sender())->setChecked(false);
     }
-  } else {
+  }
+  else
+  {
     maxon.disable();
   }
 }
@@ -277,7 +280,7 @@ void maxonControlWidget::on_rebias_clicked()
   maxon.rebias();
 }
 
-void maxonControlWidget::on_homeForce_valueChanged(double val) 
+void maxonControlWidget::on_homeForce_valueChanged(double val)
 {
   maxon.setHomeForce(val);
 }
@@ -303,7 +306,8 @@ void maxonControlWidget::on_displayUnits_clicked(bool checked)
   vel->setValue(0.0);
 
   // ToDo: Make these non-arbitrary numbers
-  if(useRaw) {
+  if (useRaw)
+  {
     mtsLong velocity;
     maxon.getTargetVelocity_raw(velocity);
     vel->setRange(0.0, 20000.0);
@@ -314,7 +318,9 @@ void maxonControlWidget::on_displayUnits_clicked(bool checked)
     position->setSingleStep(1000);
     position->setSuffix(" enc");
     velocityPointBox->setSuffix(" rpm");
-  } else {
+  }
+  else
+  {
     mtsDouble velocity;
     maxon.getTargetVelocity(velocity);
     vel->setRange(0.0, 10.0);
@@ -330,11 +336,13 @@ void maxonControlWidget::on_displayUnits_clicked(bool checked)
 
 void maxonControlWidget::on_velocity_valueChanged(double val)
 {
-  if(useRaw) {
+  if (useRaw)
+  {
     mtsLong vel = (long)val;
     maxon.setVelocity_raw(vel);
   }
-  else {
+  else
+  {
     maxon.setVelocity(val);
   }
 }
@@ -342,10 +350,12 @@ void maxonControlWidget::on_velocity_valueChanged(double val)
 void maxonControlWidget::on_velocityPointBox_valueChanged(double val)
 {
   CMN_LOG_CLASS_RUN_DEBUG << "velocity point value changed!" << std::endl;
-  if(useRaw) {
+  if (useRaw)
+  {
     maxon.setVelocityPoint_raw(val);
   }
-  else {
+  else
+  {
     maxon.setVelocityPoint(val);
   }
 }
@@ -367,22 +377,23 @@ void maxonControlWidget::on_opModeTabWidget_currentChanged(int id)
   CMN_LOG_CLASS_RUN_DEBUG << "changing operating mode " << id << std::endl;
   maxon.stop();
   maxon.setSetPointMode(false);
-  switch(id) {
-    case 0:
-      maxon.setPositionMode();
-      velGroup->setEnabled(false);
-      posGroup->setEnabled(true);
-      break;
-    case 1:
-      maxon.setVelocityMode();
-      velGroup->setEnabled(true);
-      posGroup->setEnabled(false);
-      break;
-    case 2:
-      maxon.setSetPointMode(true);
-      maxon.setVelocityMode();
-      velGroup->setEnabled(true);
-      posGroup->setEnabled(false);
+  switch (id)
+  {
+  case 0:
+    maxon.setPositionMode();
+    velGroup->setEnabled(false);
+    posGroup->setEnabled(true);
+    break;
+  case 1:
+    maxon.setVelocityMode();
+    velGroup->setEnabled(true);
+    posGroup->setEnabled(false);
+    break;
+  case 2:
+    maxon.setSetPointMode(true);
+    maxon.setVelocityMode();
+    velGroup->setEnabled(true);
+    posGroup->setEnabled(false);
   }
 }
 
@@ -391,15 +402,17 @@ void maxonControlWidget::on_movePosition_clicked()
   double pos = position->value();
   bool absolute = absoluteMove->isChecked();
 
-  if(useRaw) {
+  if (useRaw)
+  {
     mtsLong lpos = pos;
-    if(absolute) 
+    if (absolute)
       maxon.moveToAbsolutePosition_raw(lpos);
     else
       maxon.moveToRelativePosition_raw(lpos);
   }
-  else {
-    if(absolute)
+  else
+  {
+    if (absolute)
       maxon.moveToAbsolutePosition(pos);
     else
       maxon.moveToRelativePosition(pos);
@@ -421,7 +434,7 @@ void maxonControlWidget::on_negLimit_clicked()
   maxon.setNegativeLimitCurrentPosition();
 }
 
-//void maxonControlWidget::on_posLimit_clicked()
+// void maxonControlWidget::on_posLimit_clicked()
 //{
-//  maxon.setPositiveLimitCurrentPosition();
-//}
+//   maxon.setPositiveLimitCurrentPosition();
+// }

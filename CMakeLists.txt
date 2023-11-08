@@ -17,6 +17,9 @@ find_package(crtk_msgs REQUIRED)
 find_package(cisst_ros2_bridge REQUIRED)
 find_package(cisst_ros2_crtk REQUIRED)
 
+# try to debug the missing dependency errors
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+
 # find cisst and make sure the required libraries have been compiled
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
@@ -44,15 +47,26 @@ if (cisst_FOUND_AS_REQUIRED)
 
   # Create a library
   add_library(maxon_interface
+    include/maxon_epos2_driver/maxonInterface.h
     src/maxonInterface.cpp
+    include/maxon_epos2_driver/maxonMotor.h
     src/maxonMotor.cpp
+    include/maxon_epos2_driver/maxonMotorInterface.h
     src/maxonMotorInterface.cpp
     )
   target_link_libraries(maxon_interface
     -lEposCmd
     )
   cisst_target_link_libraries(maxon_interface ${REQUIRED_CISST_LIBRARIES})
-  ament_target_dependencies(maxon_interface
+
+  # Create a node, text based
+  add_executable(maxon_epos2_driver
+    src/main_maxon_control.cpp
+    )
+  target_link_libraries(maxon_epos2_driver
+    maxon_interface
+    )
+  ament_target_dependencies(maxon_epos2_driver
     rclcpp
     tf2_ros
     std_srvs
@@ -64,28 +78,45 @@ if (cisst_FOUND_AS_REQUIRED)
     cisst_ros2_crtk
     )
 
-  # Create a node
-  add_executable(maxon_epos2_driver
-    src/main_maxon_control.cpp
-    )
-  target_link_libraries(maxon_epos2_driver
-    maxon_interface
-    )
-
-  add_executable(maxon_epos2_driver_gui
-    src/main_maxon_ui_control.cpp
+  # Create GUI library
+  set (CMAKE_AUTOMOC ON)
+  add_library(maxon_gui
     src/maxonWidget.cpp
     src/maxonControlWidget.cpp
     src/maxonStatusWidget.cpp
-    )
-  target_link_libraries(maxon_epos2_driver_gui
+    include/maxon_epos2_driver/maxonWidget.h
+    include/maxon_epos2_driver/maxonControlWidget.h
+    include/maxon_epos2_driver/maxonStatusWidget.h
+  )
+  target_link_libraries(maxon_gui
     maxon_interface
+  )
+  # cisst_target_link_libraries(maxon_gui ${REQUIRED_CISST_LIBRARIES})
+
+  # Create a node, with GUI
+  add_executable(maxon_epos2_driver_gui
+    src/main_maxon_ui_control.cpp
     )
 
+  target_link_libraries(maxon_epos2_driver_gui
+    maxon_gui maxon_interface
+  )
+
+  ament_target_dependencies(maxon_epos2_driver_gui
+    rclcpp
+    tf2_ros
+    std_srvs
+    std_msgs
+    diagnostic_msgs
+    cisst_msgs
+    crtk_msgs
+    cisst_ros2_bridge
+    cisst_ros2_crtk
+    )
   ## INSTALL ##
   install(TARGETS
     maxon_epos2_driver
-    maxon_epos2_driver_gui
+    # maxon_epos2_driver_gui
     DESTINATION lib/${PROJECT_NAME}
     )
 

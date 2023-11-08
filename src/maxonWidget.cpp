@@ -9,12 +9,11 @@
 
 CMN_IMPLEMENT_SERVICES(maxonWidget)
 
-maxonWidget::maxonWidget(maxonInterface *maxon_, QWidget *parent) :
-  QWidget(parent),
-  maxon(maxon_),
-  statusWidget(new maxonStatusWidget(maxon->getMotorList())),
-  timer(new QTimer(this)),
-  motorIndex(0)
+maxonWidget::maxonWidget(maxonInterface *maxon_, QWidget *parent) : QWidget(parent),
+                                                                    maxon(maxon_),
+                                                                    timer(new QTimer(this)),
+                                                                    motorIndex(0),
+                                                                    statusWidget(new maxonStatusWidget(maxon->getMotorList()))
 {
   CMN_LOG_CLASS_INIT_DEBUG << "setting up user interface" << std::endl;
   setupUi();
@@ -33,10 +32,11 @@ maxonWidget::maxonWidget(maxonInterface *maxon_, QWidget *parent) :
 void maxonWidget::Connect(mtsManagerLocal *localManager)
 {
   statusWidget->Connect(localManager);
-  for(int i = 0; i < controls.size(); i++)
+  for (size_t i = 0; i < controls.size(); i++)
   {
-    std::string name = maxon->getMotor(i)->GetName();;
-    localManager->Connect(this->controls[i]->GetName(), "control",  name, "control");
+    std::string name = maxon->getMotor(i)->GetName();
+    ;
+    localManager->Connect(this->controls[i]->GetName(), "control", name, "control");
   }
 }
 
@@ -60,12 +60,13 @@ void maxonWidget::setupUi()
   layout->addWidget(cbk);
   layout->addWidget(statusWidget);
 
-  for(unsigned int i=0; i<maxon->getNumMotors(); i++) {
+  for (unsigned int i = 0; i < maxon->getNumMotors(); i++)
+  {
     cmb->addItem(QString("Node ") + QString::number(i));
 
     CMN_LOG_CLASS_INIT_DEBUG << "creating control widget" << std::endl;
     maxonControlWidget *control = new maxonControlWidget(
-      maxon->getMotor(i)->GetName() + "ControlWidget", this);
+        maxon->getMotor(i)->GetName() + "ControlWidget", this);
     layout->addWidget(control);
     control->setVisible(false);
     controls.push_back(control);
@@ -82,7 +83,8 @@ void maxonWidget::setupUi()
 ///////////////
 void maxonWidget::on_selectNode_currentIndexChanged(int index)
 {
-  for(int i=0; i<controls.size(); i++) {
+  for (size_t i = 0; i < controls.size(); i++)
+  {
     controls[i]->setVisible(false);
   }
 
@@ -100,11 +102,12 @@ void maxonWidget::on_recordData_toggled(bool checked)
 
 void maxonWidget::on_timer_timeout()
 {
-  if(statusWidget->update(motorIndex)) {
+  if (statusWidget->update(motorIndex))
+  {
     statusWidget->setEnabled(true);
   }
-  else {
+  else
+  {
     statusWidget->setEnabled(false);
   }
 }
-

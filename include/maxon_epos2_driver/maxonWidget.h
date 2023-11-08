@@ -13,9 +13,8 @@
 #include <cisstCommon/cmnClassRegisterMacros.h>
 
 #include "maxon_epos2_driver/maxonInterface.h"
-#include "maxon_epos2_driver/maxonStatusWidget.h" 
+#include "maxon_epos2_driver/maxonStatusWidget.h"
 #include "maxon_epos2_driver/maxonControlWidget.h"
-
 
 class maxonWidget : public QWidget, public cmnGenericObject
 {
@@ -32,13 +31,13 @@ protected:
   // methods
 public:
   maxonWidget(maxonInterface *maxon_, QWidget *parent = 0);
+
   virtual ~maxonWidget();
 
   maxonStatusWidget *statusWidget;
-  std::vector< maxonControlWidget *> controls;
+  std::vector<maxonControlWidget *> controls;
 
   void Connect(mtsManagerLocal *localManager);
-
 
 public slots:
   void on_selectNode_currentIndexChanged(int index);

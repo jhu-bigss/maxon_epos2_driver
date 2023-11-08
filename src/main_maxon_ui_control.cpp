@@ -32,23 +32,24 @@ int main(int argc, char **argv)
 #ifdef TEST_2_USB
   maxonInterface controller2("maxonInterface2", "USB1");
 #endif
-  //bool doCollection = false;
+  // bool doCollection = false;
 
-  if(argc < 2) {
+  if (argc < 2)
+  {
     std::cerr << "Usage: maxonUIControl config_file [do_collection]" << std::endl;
     std::cerr << "  config_file : The JSON motor configuration file" << std::endl;
-   // std::cerr << "  do_collection : Optional argument to do file collection." << std::endl;
-   // std::cerr << "                  Use the string true or 1 to do collection. Default is false." << std::endl;
+    // std::cerr << "  do_collection : Optional argument to do file collection." << std::endl;
+    // std::cerr << "                  Use the string true or 1 to do collection. Default is false." << std::endl;
     return 0;
   }
-  
-  //if (argc >= 3)
+
+  // if (argc >= 3)
   //{
-  //  std::string str = std::string(argv[2]);
-  //  std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-  //  if ((str.compare("true") == 0) || (str.compare("0") == 1))
-  //    doCollection = true;
-  //}
+  //   std::string str = std::string(argv[2]);
+  //   std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+  //   if ((str.compare("true") == 0) || (str.compare("0") == 1))
+  //     doCollection = true;
+  // }
 
   // initialize the controller
   controller.initialize();
@@ -58,11 +59,11 @@ int main(int argc, char **argv)
 
   // construct the maxon widget
   maxonWidget widget(&controller);
-  
+
 #ifdef TEST_2_USB
   controller2.initialize();
   controller2.addNodes(std::string(argv[2]));
-  maxonWidget m2(&controller2);  
+  maxonWidget m2(&controller2);
 #endif
 
   // start the components
@@ -80,30 +81,30 @@ int main(int argc, char **argv)
 
   componentManager->AddComponent(widget.statusWidget);
 
-/*
-#ifdef TEST_2_USB
-  controller2.Create();
-#endif
-  //if (doCollection)
-  //  controller.createCollectors();
+  /*
+  #ifdef TEST_2_USB
+    controller2.Create();
+  #endif
+    //if (doCollection)
+    //  controller.createCollectors();
 
-  componentManager->WaitForStateAll(mtsComponentState::READY, 2.0*cmn_s);
-  controller.Start();
-#ifdef TEST_2_USB
-  controller2.Start();
-#endif
-  //if (doCollection)
-  //  controller.startCollection();
+    componentManager->WaitForStateAll(mtsComponentState::READY, 2.0*cmn_s);
+    controller.Start();
+  #ifdef TEST_2_USB
+    controller2.Start();
+  #endif
+    //if (doCollection)
+    //  controller.startCollection();
 
-  m.show();
-#ifdef TEST_2_USB
-  m2.show();
-#endif
-  app.exec();
+    m.show();
+  #ifdef TEST_2_USB
+    m2.show();
+  #endif
+    app.exec();
 
-  //if (doCollection)
-  //  controller.stopCollection();
-*/
+    //if (doCollection)
+    //  controller.stopCollection();
+  */
 
   controller.Connect(componentManager);
   widget.Connect(componentManager);
@@ -113,8 +114,10 @@ int main(int argc, char **argv)
   widget.show();
   app.exec();
   componentManager->KillAll();
-  componentManager->WaitForStateAll(mtsComponentState::FINISHED, 2.0*cmn_s);
+  componentManager->WaitForStateAll(mtsComponentState::FINISHED, 2.0 * cmn_s);
   componentManager->Cleanup();
+
+  widget.~maxonWidget();
 
   return 0;
 }

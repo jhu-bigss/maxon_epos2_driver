@@ -15,7 +15,7 @@
 
 class maxonControlWidget : public QWidget, public mtsComponent
 {
-  Q_OBJECT
+  Q_OBJECT;
   CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_ALLOW_DEFAULT)
 
   // attributes
@@ -77,7 +77,7 @@ public:
   ///   with the name motorName + "Widget".
   /// \param parent The Qt parent
   maxonControlWidget(const std::string &motorName, QWidget *parent = 0);
-  ~maxonControlWidget();
+  virtual ~maxonControlWidget();
 
 public slots:
   void on_enable_toggled(bool checked);
