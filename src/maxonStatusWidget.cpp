@@ -9,11 +9,10 @@
 
 CMN_IMPLEMENT_SERVICES_DERIVED(maxonStatusWidget, mtsComponent)
 
-maxonStatusWidget::maxonStatusWidget(const std::vector<std::string> &names, const std::string &taskName, QWidget *parent) :
-  QWidget(parent),
-  mtsComponent(taskName),
-  maxonInterface(),
-  motorList(names)
+maxonStatusWidget::maxonStatusWidget(const std::vector<std::string> &names, const std::string &taskName, QWidget *parent) : QWidget(parent),
+                                                                                                                            mtsComponent(taskName),
+                                                                                                                            maxonInterface(),
+                                                                                                                            motorList(names)
 {
   setupUi();
   setupMultiTask();
@@ -21,21 +20,20 @@ maxonStatusWidget::maxonStatusWidget(const std::vector<std::string> &names, cons
 
 maxonStatusWidget::~maxonStatusWidget()
 {
-
 }
 
 void maxonStatusWidget::Connect(mtsManagerLocal *localManager)
 {
-  for (int i = 0; i < motorList.size(); i++)
+  for (size_t i = 0; i < motorList.size(); i++)
   {
-    std::cout << "motorList[i] = " << motorList[i] <<std::endl;
+    std::cout << "motorList[i] = " << motorList[i] << std::endl;
     localManager->Connect(this->GetName(), motorList[i] + "StateInterface", motorList[i], "state");
   }
 }
 
 bool maxonStatusWidget::update(int i)
 {
-  if(enabled)
+  if (enabled)
     enabled->setText("True");
   else
     enabled->setText("False");
@@ -155,7 +153,7 @@ void maxonStatusWidget::setupUi()
   force->setText("0");
   force->setReadOnly(true);
 
-  layout->addRow("Enabled", enabled);  
+  layout->addRow("Enabled", enabled);
   layout->addRow("Operation mode", opMode);
   layout->addRow("Position", position);
 #if MAXON_DISPLAY_RAW
@@ -182,9 +180,8 @@ void maxonStatusWidget::setupMultiTask()
   for (int i = 0; i < numMotors; i++)
   {
     mtsInterfaceRequired *required = this->AddInterfaceRequired(
-      motorList[i] + "StateInterface");
+        motorList[i] + "StateInterface");
     maxonInterface.push_back(new maxonMotorInterface());
     maxonInterface[i]->configureStateInterface(required);
   }
 }
-

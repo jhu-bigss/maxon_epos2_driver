@@ -33,6 +33,10 @@ set (REQUIRED_CISST_LIBRARIES
 
 find_package (cisst 1.1.0 REQUIRED ${REQUIRED_CISST_LIBRARIES})
 
+# turn on Qt code autogeneration
+# need to add headers to the add_executable and add_library calls
+set (CMAKE_AUTOMOC ON)
+
 if (cisst_FOUND_AS_REQUIRED)
 
   include(${CISST_USE_FILE})
@@ -47,6 +51,9 @@ if (cisst_FOUND_AS_REQUIRED)
     src/maxonInterface.cpp
     src/maxonMotor.cpp
     src/maxonMotorInterface.cpp
+    include/maxon_epos2_driver/maxonInterface.h
+    include/maxon_epos2_driver/maxonMotor.h
+    include/maxon_epos2_driver/maxonMotorInterface.h
     )
   target_link_libraries(maxon_interface
     -lEposCmd
@@ -77,6 +84,9 @@ if (cisst_FOUND_AS_REQUIRED)
     src/maxonWidget.cpp
     src/maxonControlWidget.cpp
     src/maxonStatusWidget.cpp
+    include/maxon_epos2_driver/maxonWidget.h
+    include/maxon_epos2_driver/maxonControlWidget.h
+    include/maxon_epos2_driver/maxonStatusWidget.h
     )
   target_link_libraries(maxon_epos2_driver_gui
     maxon_interface
