@@ -1,0 +1,42 @@
+{
+"motor": {
+    "motorParams": {
+        "nominalCurrent": 171,
+        "maxCurrent": 342,
+        "thermalTimeConstant": 99,
+        "pitch": 1,
+        "gearRatio": 84,
+        "stroke": 200
+        },
+    "sensorParams": {
+        "encoderResolution": 512,
+        "quadrature": 4,
+        "invertedPolarity": 0,
+        "type": 3
+        },
+    "safetyParams": {
+        "maxFollowError": 2000,
+        "maxProfileVelocity": 11000,
+        "maxAccel": 20000
+        },
+    "positionRegulator": {
+        "p": 13,
+        "i": 66,
+        "d": 14,
+        "vFF": 0,
+        "aFF": 3
+        },
+    "velocityRegulator": {
+        "p": 38,
+        "i": 9,
+        "vFF": 0,
+        "aFF": 3
+        },
+    "currentRegulator": {
+        "p": 7243,
+        "i": 5182
+        }
+    }
+}
+    
+

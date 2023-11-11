@@ -1,0 +1,11 @@
+{
+    "motors": [
+	{"file": "maxon_526339.json",
+         "nodeId": 1, 
+         "taskName": "roll"},
+        {"file": "maxon_466087.json",
+         "nodeId": 3, 
+         "taskName": "bend"}
+    ]
+}
+

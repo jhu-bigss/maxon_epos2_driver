@@ -1,8 +1,0 @@
-{
-    "motors": [
-        {"file": "largeMotor.json",
-         "nodeId": 1, // was 1
-         "taskName": "motor1"}
-    ]
-}
-
